@@ -1,76 +1,201 @@
-# iPhone Veri Analizi ve REST API
+# iPhone Data Analysis and REST API
 
-Bu proje, Apple iPhone ürün verilerini analiz etmek, bir MySQL veritabanında depolamak ve bu verilere erişmek için bir FastAPI tabanlı REST API sunmak üzere tasarlanmıştır. Ayrıca, Docker ve Docker Compose kullanarak tüm uygulama bileşenlerinin kolayca kurulabilir ve yönetilebilir olmasını sağlar. İlerleyen aşamalarda Elasticsearch entegrasyonu ve bir frontend görselleştirme katmanı eklenmesi hedeflenmektedir.
+This project is designed to analyze Apple iPhone product data, store it in a MySQL database, and provide a REST API built with FastAPI to access this data. It leverages Docker and Docker Compose to ensure that all application components are easily set up and managed within containers.
 
-## İçindekiler
+## Table of Contents
 
-- [Proje Amacı](#proje-amacı)
-- [Özellikler](#özellikler)
-- [Teknolojiler](#teknolojiler)
-- [Kurulum](#kurulum)
-  - [Önkoşullar](#önkoşullar)
-  - [Ortam Değişkenleri](#ortam-değişkenleri)
-  - [Uygulamayı Çalıştırma](#uygulamayı-çalıştırma)
-- [API Uç Noktaları](#api-uç-noktaları)
-- [Veritabanı Yapısı](#veritabanı-yapısı)
-- [Veri İmport İşlemi](#veri-import-işlemi)
-- [Gelecek Planları](#gelecek-planları)
-- [Katkıda Bulunma](#katkıda-bulunma)
-- [Lisans](#lisans)
-- [İletişim](#iletişim)
+-   [Project Purpose](#project-purpose)
+-   [Features](#features)
+-   [Technologies Used](#technologies-used)
+-   [Setup](#setup)
+  - [Prerequisites](#prerequisites)
+  - [Environment Variables](#environment-variables)
+  - [Running the Application](#running-the-application)
+-   [API Endpoints](#api-endpoints)
+-   [Database Schema](#database-schema)
+-   [Data Import Process](#data-import-process)
+-   [Future Plans](#future-plans)
+-   [Contributing](#contributing)
+-   [License](#license)
+-   [Contact](#contact)
 
-## Proje Amacı
+## Project Purpose
 
-Bu projenin temel amaçları şunlardır:
+The primary goals of this project are:
 
-1.  **Veri Yönetimi:** `apple_products.csv` dosyasındaki iPhone ürün verilerini temizleyip dönüştürerek bir MySQL veritabanına aktarmak.
-2.  **API Geliştirme:** Depolanan ürün verilerine güvenli ve esnek bir şekilde erişim sağlayan bir RESTful API (FastAPI ile) geliştirmek.
-3.  **Konteynerleştirme:** Docker ve Docker Compose kullanarak veritabanı ve API servislerini izole ve taşınabilir konteynerler içinde çalıştırmak.
-4.  **Veri Analizi Altyapısı:** İleride daha gelişmiş veri analizleri ve görselleştirmeler için bir temel oluşturmak.
+1.  **Data Management:** Clean and transform Apple iPhone product data from `apple_products.csv` and import it into a MySQL database.
+2.  **API Development:** Develop a RESTful API (using FastAPI) to provide secure and flexible access to the stored product data.
+3.  **Containerization:** Utilize Docker and Docker Compose to run the database and API services within isolated and portable containers.
+4.  **Data Analysis Foundation:** Establish a solid foundation for more advanced data analysis and visualization in the future.
 
-## Özellikler
+## Features
 
--   **Veri İmportu:** `apple_products.csv` dosyasından veritabanına kolay veri aktarımı.
--   **REST API:** Ürün verilerine filtreleme seçenekleriyle (`brand`, `ram`, `min_rating`, `max_price`) erişim.
--   **MySQL Veritabanı:** İlişkisel veri depolama.
--   **Docker & Docker Compose:** Hızlı kurulum ve kolay servis yönetimi.
--   **Sanal Ortam:** Python bağımlılıkları için izole geliştirme ortamı.
+-   **Data Import:** Easy and fast data import from the `apple_products.csv` file into the database.
+-   **REST API:** Access to product data with filtering options (`brand`, `ram`, `min_rating`, `max_price`).
+-   **MySQL Database:** Relational data storage and querying.
+-   **Docker & Docker Compose:** Quick setup and straightforward service management.
+-   **Virtual Environment:** Isolated development environment for Python dependencies.
 
-## Teknolojiler
+## Technologies Used
 
 -   **Backend:**
     -   Python 3.11+
     -   [FastAPI](https://fastapi.tiangolo.com/)
     -   [SQLAlchemy](https://www.sqlalchemy.org/) (ORM)
-    -   [Pydantic](https://pydantic-docs.helpmanual.io/) (Veri doğrulama ve seri hale getirme)
-    -   [python-dotenv](https://pypi.org/project/python-dotenv/) (Ortam değişkenleri yönetimi)
--   **Veritabanı:**
+    -   [Pydantic](https://pydantic-docs.helpmanual.io/) (Data validation and serialization)
+    -   [python-dotenv](https://pypi.org/project/python-dotenv/) (Environment variables management)
+-   **Database:**
     -   [MySQL 8.0](https://www.mysql.com/)
-    -   [mysql-connector-python](https://pypi.org/project/mysql-connector-python/) (MySQL bağlantısı)
--   **Veri İşleme:**
+    -   [mysql-connector-python](https://pypi.org/project/mysql-connector-python/) (MySQL connector)
+-   **Data Processing:**
     -   [Pandas](https://pandas.pydata.org/)
--   **Konteynerleştirme:**
+-   **Containerization:**
     -   [Docker](https://www.docker.com/)
     -   [Docker Compose](https://docs.docker.com/compose/)
 
-## Kurulum
+## Setup
 
-### Önkoşullar
+### Prerequisites
 
-Projenizi çalıştırmak için aşağıdaki yazılımların sisteminizde yüklü olması gerekmektedir:
+To run this project, ensure you have the following software installed on your system:
 
 -   [Git](https://git-scm.com/downloads)
--   [Docker Desktop](https://www.docker.com/products/docker-desktop) (Docker ve Docker Compose'u içerir)
--   [Python 3.11+](https://www.python.org/downloads/) (Sanal ortam kurmak için)
+-   [Docker Desktop](https://www.docker.com/products/docker-desktop) (includes Docker and Docker Compose)
+-   [Python 3.11+](https://www.python.org/downloads/) (for setting up the virtual environment)
 
-### Ortam Değişkenleri
+### Environment Variables
 
-Proje, veritabanı bağlantı bilgileri için ortam değişkenlerini kullanır. Projenizin kök dizininde `.env` adında bir dosya oluşturmanız ve aşağıdaki formatta doldurmanız gerekmektedir:
+The project uses environment variables for sensitive information like database connection details. These variables are stored in a `.env` file, which is **not committed to the Git repository for security reasons**.
 
-```dotenv
-# .env dosyası
+1.  **Copy the `.env.example` file:**
+    Duplicate the `.env.example` file located in the project's root directory and rename the copy to `.env`.
 
-DB_USER=your_mysql_user
-DB_PASS=your_mysql_password
-DB_HOST=db  # Docker Compose network içinde servis adı
-DB_NAME=your_database_name
+    ```bash
+    cp .env.example .env
+    ```
+
+2.  **Edit the `.env` file:**
+    Open the newly created `.env` file with a text editor and fill in the following variables with your actual MySQL username and password.
+    The `DB_HOST` value should remain `db`, as it refers to the MySQL service name within the Docker Compose network.
+
+    ```dotenv
+    # .env file (fill in your actual values after copying)
+
+    DB_USER=yourcustomuser          # Enter your MySQL username here
+    DB_PASS=your_strong_password    # Enter your MySQL password here (Choose a strong password!)
+    DB_HOST=db                      # Docker Compose service name. Please do NOT change this value!
+    DB_NAME=iphone_db               # The name of your database
+    ```
+
+### Running the Application
+
+1.  **Clone the Repository:**
+
+    ```bash
+    git clone [https://github.com/CosmicMass/iphone-analysis-api.git](https://github.com/CosmicMass/iphone-analysis-api.git)
+    cd iphone-analysis-api
+    ```
+
+2.  **Create and Activate a Virtual Environment:**
+
+    ```bash
+    python -m venv .venv
+    # For Windows:
+    .venv\Scripts\activate
+    # For macOS/Linux:
+    source .venv/bin/activate
+    ```
+
+3.  **Install Python Dependencies:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Start Docker Containers:**
+    This command will spin up the MySQL database and FastAPI API services using Docker Compose in detached mode (in the background).
+
+    ```bash
+    docker-compose up --build -d
+    ```
+    -   `--build`: Rebuilds Docker images if there are changes.
+    -   `-d`: Runs containers in detached (background) mode.
+
+    **To ensure services are ready:** You can check the status of the services using `docker-compose ps` to see if they are in an `Up (healthy)` state. The MySQL database may take a little time to become `healthy`.
+
+5.  **Import Data into the Database:**
+    Once the application services are fully up and running, you can import the data from `apple_products.csv` into the MySQL database.
+
+    ```bash
+    python data_import.py
+    ```
+    This script will create the database tables if they don't exist and then import the data from the CSV file.
+
+Your FastAPI API should now be running at `http://localhost:8000`!
+
+## API Endpoints
+
+The API is accessible at `http://localhost:8000`. For automatic API documentation, you can visit `/docs` (e.g., `http://localhost:8000/docs`).
+
+### Listing and Filtering Products
+
+-   **GET `/products`**
+    -   Lists all iPhone products or filters them based on specific criteria.
+    -   **Query Parameters:**
+        -   `brand` (string, optional): Filters by brand (e.g., `Apple`).
+        -   `ram` (string, optional): Filters by RAM size (e.g., `2 GB`, `4 GB`).
+        -   `min_rating` (float, optional): Filters by minimum star rating (e.g., `4.5`).
+        -   `max_price` (int, optional): Filters by maximum sale price (e.g., `60000`).
+
+    **Example Requests:**
+
+    ```
+    GET http://localhost:8000/products
+    GET http://localhost:8000/products?ram=2%20GB
+    GET http://localhost:8000/products?min_rating=4.6&max_price=50000
+    ```
+
+## Database Schema
+
+The `apple_products` table contains the following columns:
+
+| Column Name           | Data Type   | Description                                           |
+| :-------------------- | :---------- | :---------------------------------------------------- |
+| `id`                  | `INTEGER`   | Primary key, auto-incrementing                        |
+| `product_name`        | `VARCHAR`   | Full name of the product                              |
+| `brand`               | `VARCHAR`   | Brand of the product (e.g., "Apple")                  |
+| `sale_price`          | `INTEGER`   | Selling price of the product                          |
+| `mrp`                 | `INTEGER`   | Maximum Retail Price                                  |
+| `discount_percentage` | `INTEGER`   | Discount percentage                                   |
+| `number_of_ratings`   | `INTEGER`   | Total number of ratings for the product               |
+| `number_of_reviews`   | `INTEGER`   | Total number of reviews for the product               |
+| `upc`                 | `VARCHAR`   | UPC (Universal Product Code) of the product           |
+| `star_rating`         | `FLOAT`     | Average star rating of the product (between 0-5)      |
+| `ram`                 | `VARCHAR`   | RAM size of the product (e.g., "2 GB", "4 GB")        |
+
+## Data Import Process
+
+The `data_import.py` script reads the `data/apple_products.csv` file, cleans missing values, converts data types, and performs a bulk insert operation into the `apple_products` table. This script is also responsible for creating the database tables (`Base.metadata.create_all`).
+
+## Future Plans
+
+This project aims to be extended with the following developments:
+
+-   **Elasticsearch Integration:** Adding Elasticsearch and Kibana for powerful full-text search and advanced data analytics.
+-   **More API Endpoints:** Implementing new API endpoints for analytical queries, such as average prices, top-rated products, or discount summaries.
+-   **Frontend Development:** Building a frontend application (with React/Vue/Angular) to visualize the data from the API and provide an interactive user interface.
+-   **AI-Powered Data Cleaning & Schema Suggestion:** Developing a system that leverages Large Language Models (LLMs) like Gemini to automatically suggest data cleaning steps, data types, and database schemas for various datasets.
+
+## Contributing
+
+Contributions are welcome! If you find any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the [MIT License]. See the `LICENSE` file for more details.
+
+## Contact
+
+Mehmet Pala - mehmetapostrof@gmail.com
+
+Project Link: [https://github.com/CosmicMass/iphone-analysis-api](https://github.com/CosmicMass/iphone-analysis-api)
