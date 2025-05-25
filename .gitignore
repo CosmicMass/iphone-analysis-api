@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment variables
+.env
+
+# Data
+data/
+# Eğer data klasöründeki tüm dosyaları ignore etmek istemiyorsanız, sadece büyük dosyaları veya hassas olanları listeleyin
+# Örneğin:
+# data/*.csv
+# data/*.json
+# data/my_large_dataset.zip
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Docker specific files
+*.log
+.dockerignore # eğer kendi .dockerignore dosyanız varsa
